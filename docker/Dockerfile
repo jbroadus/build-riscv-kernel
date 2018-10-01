@@ -15,3 +15,5 @@ RUN dnf install -y gcc-c++
 RUN dnf install -y zlib-devel
 RUN dnf install -y expat-devel
 RUN dnf install -y make
+RUN dnf install -y bc
+RUN dnf install -y findutils

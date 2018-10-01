@@ -3,10 +3,29 @@ IMAGE := riscv-kernel-builder
 DOCKER_CMD := docker run -v ${PWD}:/build -w /build -u $(USER) $(IMAGE)
 TOOLCHAIN_DIR := riscv-gnu-toolchain
 TOOLS_DIR := /build/tools/
-#TOOLCHAIN_CONFIG := --with-arch=rv64ima
-#TOOLCHAIN_CONFIG += --disable-multilib
-#TOOLCHAIN_CONFIG += --disable-bootstrap
 TOOLCHAIN_CONFIG += --prefix=$(TOOLS_DIR)
+
+CROSS_PREFIX := $(TOOLS_DIR)/bin/riscv64-unknown-linux-gnu-
+CFLAGS := ARCH=riscv CROSS_COMPILE=$(CROSS_PREFIX) -j4
+
+DEFCONFIG := defconfig
+KERNEL_TARGETS := vmlinux modules
+
+
+all: $(KERNEL_TARGETS)
+
+# KERNEL
+
+ $(KERNEL_TARGETS): tools config
+
+ $(KERNEL_TARGETS) $(DEFCONFIG) help:
+	$(DOCKER_CMD) make -C riscv-linux -f Makefile $(CFLAGS) $@
+
+.PHONY: config
+config: linux/.config
+
+linux/.config:
+	make $(DEFCONFIG)
 
 
 # TOOLCHAIN

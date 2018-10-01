@@ -18,3 +18,7 @@ If selinux is in use, set the context for use with the container:
 
 ## Toolchain
 `make toolchain`
+
+
+## Kernel
+`make`
